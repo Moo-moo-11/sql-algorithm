@@ -1,9 +1,10 @@
-select CATEGORY, PRICE MAX_PRICE, PRODUCT_NAME
-from
+SELECT CATEGORY, PRICE MAX_PRICE, PRODUCT_NAME
+FROM FOOD_PRODUCT
+WHERE (CATEGORY, PRICE) IN
 (
-select CATEGORY, rank() over (partition by CATEGORY order by PRICE desc) rn, PRICE, PRODUCT_NAME
-from FOOD_PRODUCT
-where CATEGORY in ('과자', '국', '김치', '식용유')
-) a
-where rn = 1
-order by 2 desc
+    SELECT CATEGORY, MAX(PRICE) MAX_PRICE
+    FROM FOOD_PRODUCT
+    WHERE CATEGORY IN ('과자', '국', '김치', '식용유')
+    GROUP BY CATEGORY
+)
+ORDER BY MAX_PRICE DESC
